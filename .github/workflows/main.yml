@@ -26,7 +26,6 @@ jobs:
           username: ${{secrets.SSH_USERNAME}}
           
           script: |
-            mkdir test
-            cd test
-            git clone git@github.com:2110521-2564-1-SW-ARCH/lgt-location.git
+            cd lgt-location
+            git pull
             echo 'Deployment complete'
