@@ -27,6 +27,7 @@ jobs:
           
           script: |
             cd lgt-location
+            git checkout main
             git pull
             docker-compose up -d prod
             echo 'Deployment prod complete'
