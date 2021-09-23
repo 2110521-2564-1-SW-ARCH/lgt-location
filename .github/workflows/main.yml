@@ -28,5 +28,5 @@ jobs:
           script: |
             cd lgt-location
             git pull
-            docker-compose up --remove-orphans -d prod
+            docker-compose up -d prod
             echo 'Deployment prod complete'
