@@ -31,20 +31,20 @@ export class Location {
   @Column()
   province: string;
 
-  @Column({ nullable: true })
+  @Column()
   latitude: string;
 
-  @Column({ nullable: true })
+  @Column()
   longitude: string;
 
-  // @Column()
-  // img: path s3;
+  @Column()
+  imgURL: string;
 
   @ManyToMany((type) => Tag, (tag) => tag.locations)
   @JoinTable()
   tags: Tag[];
 
-  @OneToMany((type) => Review, (review) => review.location, { nullable: true })
+  @OneToMany((type) => Review, (review) => review.location)
   reviews: Review[];
 
   @Column()
