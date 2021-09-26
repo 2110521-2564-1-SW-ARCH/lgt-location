@@ -3,12 +3,17 @@ syntax = "proto3";
 package location;
 
 service LocationsService {
-    rpc GetLocation(LocationId) returns (Location) {}
-    rpc GetAllLocations(Empty) returns (LocationList) {}
-    rpc AddLocation(CreateLocationDto) returns (Location) {}
+    rpc GetLocation(LocationId) returns (Location);
+    rpc GetAllLocations(Empty) returns (LocationList);
+    rpc AddLocation(CreateLocationDto) returns (Location);
+    rpc SearchLocation(Keyword) returns (LocationList);
 }
 
 message Empty{}
+
+message Keyword {
+    string keyword=1;
+}
 
 message Location {
     int32 id=1;
