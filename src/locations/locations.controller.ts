@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Inject, Param, Post, UseGuards } from '@nestjs/common';
+import { Controller, Inject } from '@nestjs/common';
 import { ClientGrpc, GrpcMethod } from '@nestjs/microservices';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -7,8 +7,10 @@ import { CreateLocationDTO } from './dto/createLocation.dto';
 
 interface LocationsService {
   GetAllLocations(): Promise<{ data: Location[] }>;
+  // eslint-disable-next-line @typescript-eslint/ban-types
   GetLocation(params: {}): Promise<{ data: Location }>;
   AddLocation(location: CreateLocationDTO): Promise<Location>;
+  SearchLocation(keyword: string): Promise<{ data: Location[] }>;
 }
 
 @Controller('locations')
@@ -26,25 +28,21 @@ export class LocationsController {
       this.client.getService<LocationsService>('LocationsService');
   }
 
-  @Get()
-  async findAllLocations() {
-    return this.locationsService.GetAllLocations();
-  }
-
-  @Get(':id')
-  async findLocation(@Param('id') id: string) {
-    return this.locationsService.GetLocation({ id: +id });
-  }
-
-  @Post()
-  // @UseGuards(JwtAuthenticationGuard)
-  async createPost(@Body() location: CreateLocationDTO) {
-    return this.locationsService.AddLocation(location);
-  }
-
   @GrpcMethod('LocationsService')
   async GetAllLocations() {
     const data = await this.locationsRepository.find();
+    return { data };
+  }
+
+  @GrpcMethod('LocationsService')
+  async SearchLocation({ keyword }) {
+    const data = await this.locationsRepository
+      .createQueryBuilder('location')
+      .where(
+        'location.name like :keyword OR location.description like :keyword OR location.type like :keyword OR location.address like :keyword OR location.district like :keyword OR location.subDistrict like :keyword OR location.postCode like :keyword OR location.province like :keyword ',
+        { keyword: `%${keyword}%` },
+      )
+      .getMany();
     return { data };
   }
 
