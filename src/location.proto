@@ -1,0 +1,34 @@
+syntax = "proto3";
+
+package location;
+
+service LocationsService {
+    rpc GetLocation(LocationId) returns (Location) {}
+    rpc GetAllLocations(Empty) returns (LocationList) {}
+    rpc AddLocation(Location) returns (Location) {}
+}
+
+message Empty{}
+
+message Location {
+    int32 id=1;
+    string name=2;
+    string description=3;
+    string type=4;
+    string address=5;
+    string district=6;
+    string subDistrict=7;
+    string postCode=8;
+    string province=9;
+    string latitude=10;
+    string longitude=11;
+    string imgURL=12;
+}
+
+message LocationList{
+    repeated Location data=1;
+}
+
+message LocationId{
+    int32 id=1;
+}
