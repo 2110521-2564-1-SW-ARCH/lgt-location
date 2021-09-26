@@ -1,12 +1,14 @@
-import { Controller, Get, Inject, Param } from '@nestjs/common';
+import { Body, Controller, Get, Inject, Param, Post, UseGuards } from '@nestjs/common';
 import { ClientGrpc, GrpcMethod } from '@nestjs/microservices';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Location } from './location.entity';
+import { CreateLocationDTO } from './dto/createLocation.dto';
 
 interface LocationsService {
   GetAllLocations(): Promise<{ data: Location[] }>;
   GetLocation(params: {}): Promise<{ data: Location }>;
+  AddLocation(location: CreateLocationDTO): Promise<Location>;
 }
 
 @Controller('locations')
@@ -34,6 +36,12 @@ export class LocationsController {
     return this.locationsService.GetLocation({ id: +id });
   }
 
+  @Post()
+  // @UseGuards(JwtAuthenticationGuard)
+  async createPost(@Body() location: CreateLocationDTO) {
+    return this.locationsService.AddLocation(location);
+  }
+
   @GrpcMethod('LocationsService')
   async GetAllLocations() {
     const data = await this.locationsRepository.find();
@@ -43,5 +51,12 @@ export class LocationsController {
   @GrpcMethod('LocationsService')
   async GetLocation({ id }) {
     return await this.locationsRepository.findOne(id);
+  }
+
+  @GrpcMethod('LocationsService')
+  async AddLocation(location: CreateLocationDTO) {
+    const newLocation = await this.locationsRepository.create(location);
+    await this.locationsRepository.save(newLocation);
+    return newLocation;
   }
 }
