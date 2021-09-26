@@ -40,11 +40,11 @@ export class Location {
   @Column()
   imgURL: string;
 
-  @ManyToMany((type) => Tag, (tag) => tag.locations)
+  @ManyToMany((type) => Tag, (tag) => tag.locations, {nullable: true})
   @JoinTable()
   tags: Tag[];
 
-  @OneToMany((type) => Review, (review) => review.location)
+  @OneToMany((type) => Review, (review) => review.location, {nullable: true})
   reviews: Review[];
 
   @Column()
