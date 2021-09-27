@@ -6,6 +6,7 @@ service LocationsService {
     rpc GetLocation(LocationId) returns (Location) {}
     rpc GetAllLocations(Empty) returns (LocationList) {}
     rpc AddLocation(CreateLocationDto) returns (Location) {}
+    rpc DeleteLocation(LocationId) returns (LocationList) {}
 }
 
 message Empty{}

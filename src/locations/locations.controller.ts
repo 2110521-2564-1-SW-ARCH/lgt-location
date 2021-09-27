@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Inject, Param, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Inject, Param, Post, UseGuards } from '@nestjs/common';
 import { ClientGrpc, GrpcMethod } from '@nestjs/microservices';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -9,6 +9,7 @@ interface LocationsService {
   GetAllLocations(): Promise<{ data: Location[] }>;
   GetLocation(params: {}): Promise<{ data: Location }>;
   AddLocation(location: CreateLocationDTO): Promise<Location>;
+  DeleteLocation(params: {}): Promise<{ data: Location[] }>;
 }
 
 @Controller('locations')
@@ -42,6 +43,11 @@ export class LocationsController {
     return this.locationsService.AddLocation(location);
   }
 
+  @Delete(':id')
+  async deleteLocation(@Param('id') id: string) {
+    return this.locationsService.DeleteLocation({ id: +id });
+  }
+
   @GrpcMethod('LocationsService')
   async GetAllLocations() {
     const data = await this.locationsRepository.find();
@@ -58,5 +64,12 @@ export class LocationsController {
     const newLocation = await this.locationsRepository.create(location);
     await this.locationsRepository.save(newLocation);
     return newLocation;
+  }
+
+  @GrpcMethod('LocationsService')
+  async DeleteLocation({ id }) {
+    await this.locationsRepository.delete(id);
+    const data = await this.locationsRepository.find();
+    return { data };
   }
 }
