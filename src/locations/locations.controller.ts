@@ -29,27 +29,6 @@ export class LocationsController {
       this.client.getService<LocationsService>('LocationsService');
   }
 
-  @Get()
-  async findAllLocations() {
-    return this.locationsService.GetAllLocations();
-  }
-
-  @Get(':id')
-  async findLocation(@Param('id') id: string) {
-    return this.locationsService.GetLocation({ id: +id });
-  }
-
-  @Post()
-  // @UseGuards(JwtAuthenticationGuard)
-  async createPost(@Body() location: CreateLocationDTO) {
-    return this.locationsService.AddLocation(location);
-  }
-
-  @Delete(':id')
-  async deleteLocation(@Param('id') id: string) {
-    return this.locationsService.DeleteLocation({ id: +id });
-  }
-
   @GrpcMethod('LocationsService')
   async GetAllLocations() {
     const data = await this.locationsRepository.find();
