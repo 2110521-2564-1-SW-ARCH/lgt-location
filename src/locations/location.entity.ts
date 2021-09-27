@@ -1,6 +1,13 @@
 import { Review } from 'src/reviews/review.entity';
 import { Tag } from 'src/tags/tag.entity';
-import { Entity, Column, PrimaryGeneratedColumn, ManyToMany, JoinTable, OneToMany } from 'typeorm';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  ManyToMany,
+  JoinTable,
+  OneToMany,
+} from 'typeorm';
 
 @Entity('locations')
 export class Location {
@@ -40,11 +47,11 @@ export class Location {
   @Column()
   imgURL: string;
 
-  @ManyToMany((type) => Tag, (tag) => tag.locations, {nullable: true})
+  @ManyToMany(() => Tag, (tag) => tag.locations, { nullable: true })
   @JoinTable()
   tags: Tag[];
 
-  @OneToMany((type) => Review, (review) => review.location, {nullable: true})
+  @OneToMany(() => Review, (review) => review.location, { nullable: true })
   reviews: Review[];
 
   @Column()

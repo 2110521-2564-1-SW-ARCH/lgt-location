@@ -7,9 +7,14 @@ service LocationsService {
     rpc GetAllLocations(Empty) returns (LocationList) {}
     rpc AddLocation(CreateLocationDto) returns (Location) {}
     rpc DeleteLocation(LocationId) returns (LocationList) {}
+    rpc SearchLocation(Keyword) returns (LocationList);
 }
 
 message Empty{}
+
+message Keyword {
+    string keyword=1;
+}
 
 message Location {
     int32 id=1;

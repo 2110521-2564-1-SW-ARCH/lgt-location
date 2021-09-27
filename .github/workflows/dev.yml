@@ -29,5 +29,5 @@ jobs:
             cd lgt-location
             git checkout dev
             git pull
-            docker-compose up -d dev
+            docker-compose up --build --remove-orphans dev
             echo 'Deployment dev complete'

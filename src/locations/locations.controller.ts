@@ -7,9 +7,11 @@ import { CreateLocationDTO } from './dto/createLocation.dto';
 
 interface LocationsService {
   GetAllLocations(): Promise<{ data: Location[] }>;
+  // eslint-disable-next-line @typescript-eslint/ban-types
   GetLocation(params: {}): Promise<{ data: Location }>;
   AddLocation(location: CreateLocationDTO): Promise<Location>;
   DeleteLocation(params: {}): Promise<{ data: Location[] }>;
+  SearchLocation(keyword: string): Promise<{ data: Location[] }>;
 }
 
 @Controller('locations')
@@ -51,6 +53,18 @@ export class LocationsController {
   @GrpcMethod('LocationsService')
   async GetAllLocations() {
     const data = await this.locationsRepository.find();
+    return { data };
+  }
+
+  @GrpcMethod('LocationsService')
+  async SearchLocation({ keyword }) {
+    const data = await this.locationsRepository
+      .createQueryBuilder('location')
+      .where(
+        'location.name like :keyword OR location.description like :keyword OR location.type like :keyword OR location.address like :keyword OR location.district like :keyword OR location.subDistrict like :keyword OR location.postCode like :keyword OR location.province like :keyword ',
+        { keyword: `%${keyword}%` },
+      )
+      .getMany();
     return { data };
   }
 
