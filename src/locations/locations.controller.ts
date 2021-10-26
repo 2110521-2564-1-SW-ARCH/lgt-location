@@ -7,7 +7,6 @@ import { CreateLocationDTO } from './dto/createLocation.dto';
 
 interface LocationsService {
   GetAllLocations(): Promise<{ data: Location[] }>;
-  // eslint-disable-next-line @typescript-eslint/ban-types
   GetLocation(params: {}): Promise<{ data: Location }>;
   AddLocation(location: CreateLocationDTO): Promise<Location>;
   DeleteLocation(params: {}): Promise<{ data: Location[] }>;
@@ -16,18 +15,12 @@ interface LocationsService {
 
 @Controller('locations')
 export class LocationsController {
-  private locationsService: LocationsService;
 
   constructor(
     @InjectRepository(Location)
     private locationsRepository: Repository<Location>,
     @Inject('LOCATION_PACKAGE') private client: ClientGrpc,
   ) {}
-
-  onModuleInit() {
-    this.locationsService =
-      this.client.getService<LocationsService>('LocationsService');
-  }
 
   @GrpcMethod('LocationsService')
   async GetAllLocations() {
