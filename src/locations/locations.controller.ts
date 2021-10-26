@@ -33,7 +33,14 @@ export class LocationsController {
     const data = await this.locationsRepository
       .createQueryBuilder('location')
       .where(
-        'location.name like :keyword OR location.description like :keyword OR location.type like :keyword OR location.address like :keyword OR location.district like :keyword OR location.subDistrict like :keyword OR location.postCode like :keyword OR location.province like :keyword ',
+        'location.name ILIKE :keyword OR \
+        location.description ILIKE :keyword OR \
+        location.type ILIKE :keyword OR \
+        location.address ILIKE :keyword OR \
+        location.district ILIKE :keyword OR \
+        location.subDistrict ILIKE :keyword OR \
+        location.postCode ILIKE :keyword OR \
+        location.province ILIKE :keyword ',
         { keyword: `%${keyword}%` },
       )
       .getMany();
